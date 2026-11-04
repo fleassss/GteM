@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>8. Sınıf Matematik Soru Havuzu - Akıllı Tahta</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: #f0f2f5; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        
+        header { background: #1e293b; color: white; padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); z-index: 10; }
+        header h1 { font-size: 1.3rem; }
+        
+        .toolbar { display: flex; gap: 10px; align-items: center; background: #334155; padding: 8px 15px; border-radius: 8px; }
+        .toolbar button { background: #475569; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; gap: 5px; transition: 0.2s; }
+        .toolbar button:hover, .toolbar button.active { background: #3b82f6; }
+        .toolbar input[type="color"] { border: none; width: 30px; height: 30px; cursor: pointer; background: none; }
+        
+        .main-container { display: flex; flex: 1; position: relative; overflow: hidden; }
+        
+        .question-area { flex: 1; padding: 30px; display: flex; flex-direction: column; gap: 25px; background: white; position: relative; z-index: 1; overflow-y: auto; }
+        
+        .question-card { max-width: 800px; margin: 0 auto; width: 100%; background: #fff; border: 1px solid #cbd5e1; border-radius: 10px; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .q-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; }
+        .q-number { font-size: 1.2rem; font-weight: bold; color: #1e293b; }
+        .q-text { font-size: 1.15rem; color: #334155; line-height: 1.5; margin-bottom: 15px; font-weight: 500; }
+        
+        .options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+        .option { background: #f8fafc; border: 2px solid #cbd5e1; padding: 10px 15px; border-radius: 6px; font-size: 1rem; color: #1e293b; font-weight: 500; }
+        
+        .answer-box { background: #fef08a; border: 1px solid #facc15; padding: 12px; border-radius: 6px; display: none; font-size: 1rem; color: #854d0e; font-weight: bold; }
+        
+        .creator-screen { text-align: center; padding: 40px; background: #1e293b; color: white; border-radius: 12px; max-width: 800px; margin: 0 auto; width: 100%; }
+        .creator-screen h2 { font-size: 2.5rem; color: #facc15; margin-bottom: 15px; }
+        .creator-screen p { font-size: 1.5rem; color: #38bdf8; font-weight: bold; }
+
+        #drawing-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 5; pointer-events: none; }
+        #drawing-canvas.active { pointer-events: auto; cursor: crosshair; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>8. Sınıf Matematik Soru Havuzu</h1>
+        <div class="toolbar">
+            <button id="penBtn" onclick="setTool('pen')">✏️ Kalem</button>
+            <button id="eraserBtn" onclick="setTool('eraser')">🧹 Silgi</button>
+            <input type="color" id="colorPicker" value="#000000" onchange="setColor(this.value)">
+            <button onclick="clearCanvas()">🗑️ Temizle</button>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <canvas id="drawing-canvas"></canvas>
+        <div class="question-area">
+            
+            <!-- Soru 1 -->
+            <div class="question-card">
+                <div class="q-header">
+                    <span class="q-number">Soru 1</span>
+                    <button style="background: #d97706; color:white; border:none; padding:6px 12px; border-radius:5px; cursor:pointer;" onclick="toggleAnswer(this)">💡 Cevap</button>
+                </div>
+                <div class="q-text">108 sayısının asal çarpanlarına ayrılmış hali aşağıdakilerden hangisidir?</div>
+                <div class="options">
+                    <div class="option">A) 2² · 3³</div>
+                    <div class="option">B) 2³ · 3²</div>
+                    <div class="option">C) 2² · 3²</div>
+                    <div class="option">D) 2³ · 3³</div>
+                </div>
+                <div class="answer-box">Doğru Cevap: A (108 = 4 · 27 = 2² · 3³)</div>
+            </div>
+
+            <!-- Soru 2 -->
+            <div class="question-card">
+                <div class="q-header">
+                    <span class="q-number">Soru 2</span>
+                    <button style="background: #d97706; color:white; border:none; padding:6px 12px; border-radius:5px; cursor:pointer;" onclick="toggleAnswer(this)">💡 Cevap</button>
+                </div>
+                <div class="q-text">72 ve 120 sayılarının En Büyük Ortak Böleni (EBOB) kaçtır?</div>
+                <div class="options">
+                    <div class="option">A) 12</div>
+                    <div class="option">B) 18</div>
+                    <div class="option">C) 24</div>
+                    <div class="option">D) 36</div>
+                </div>
+                <div class="answer-box">Doğru Cevap: C (EBOB(72, 120) = 24)</div>
+            </div>
+
+            <!-- Soru 3 -->
+            <div class="question-card">
+                <div class="q-header">
+                    <span class="q-number">Soru 3</span>
+                    <button style="background: #d97706; color:white; border:none; padding:6px 12px; border-radius:5px; cursor:pointer;" onclick="toggleAnswer(this)">💡 Cevap</button>
+                </div>
+                <div class="q-text">45 ve 60 sayılarının En Küçük Ortak Katı (EKOK) kaçtır?</div>
+                <div class="options">
+                    <div class="option">A) 120</div>
+                    <div class="option">B) 150</div>
+                    <div class="option">C) 180</div>
+                    <div class="option">D) 240</div>
+                </div>
+                <div class="answer-box">Doğru Cevap: C (EKOK(45, 60) = 180)</div>
+            </div>
+
+            <!-- Soru 4 -->
+            <div class="question-card">
+                <div class="q-header">
+                    <span class="q-number">Soru 4</span>
+                    <button style="background: #d97706; color:white; border:none; padding:6px 12px; border-radius:5px; cursor:pointer;" onclick="toggleAnswer(this)">💡 Cevap</button>
+                </div>
+                <div class="q-text">Aşağıdaki sayı çiftlerinden hangisi aralarında asaldır?</div>
+                <div class="options">
+                    <div class="option">A) (15, 21)</div>
+                    <div class="option">B) (8, 35)</div>
+                    <div class="option">C) (9, 27)</div>
+                    <div class="option">D) (14, 49)</div>
+                </div>
+                <div class="answer-box">Doğru Cevap: B (8 ve 35 sayılarının 1'den başka ortak böleni yoktur.)</div>
+            </div>
+
+            <!-- Soru 5 -->
+            <div class="question-card">
+                <div class="q-header">
+                    <span class="q-number">Soru 5</span>
+                    <button style="background: #d97706; color:white; border:none; padding:6px 12px; border-radius:5px; cursor:pointer;" onclick="toggleAnswer(this)">💡 Cevap</button>
+                </div>
+                <div class="q-text">2⁻⁴ ifadesinin değeri aşağıdakilerden hangisidir?</div>
+                <div class="options">
+                    <div class="option">A) -16</div>
+                    <div class="option">B) -1/16</div>
+                    <div class="option">C) 1/8</div>
+                    <div class="option">D) 1/16</div>
+                </div>
+                <div class="answer-box">Doğru Cevap: D (2⁻⁴ = 1 / 2⁴ = 1/16)</div>
+            </div>
+
+            <!-- Soru 6 -->
+            <div class="question-card">
+                <div class="q-header">
+                    <span class="q-number">Soru 6</span>
+                    <button style="background: #d97706; color:white; border:none; padding:6px 12px; border-radius:5px; cursor:pointer;" onclick="toggleAnswer(this)">💡 Cevap</button>
+                </div>
+                <div class="q-text">0,000045 sayısının bilimsel gösterimi aşağıdakilerden hangisidir?</div>
+                <div class="options">
+                    <div class="option">A) 4,5 · 10⁻⁵</div>
+                    <div class="option">B) 4,5 · 10⁻⁴</div>
+                    <div class="option">C) 45 · 10⁻⁶</div>
+                    <div class="option">D) 0,45 · 10⁻⁴</div>
+                </div>
+                <div class="answer-box">Doğru Cevap: A (4,5 · 10⁻⁵)</div>
+            </div>
+
+            <!-- Soru 7 -->
+            <div class="question-card">
+                <div class="q-header">
+                    <span class="q-number">Soru 7</span>
+                    <button style="background: #d97706; color:white; border:none; padding:6px 12px; border-radius:5px; cursor:pointer;" onclick="toggleAnswer(this)">💡 Cevap</button>
+                </div>
+                <div class="q-text">√196 sayısı hangi iki doğal sayı arasındadır?</div>
+                <div class="options">
+                    <div class="option">A) 12 ile 13</div>
+                    <div class="option">B) 13 ile 14</div>
+                    <div class="option">C) Tam olarak 14</div>
+                    <div class="option">D) 14 ile 15</div>
+                </div>
+                <div class="answer-box">Doğru Cevap: C (196 sayısı 14'ün karesidir, yani tam olarak 14'tür.)</div>
+            </div>
+
+            <!-- Soru 8 -->
+            <div class="question-card">
+                <div class="q-header">
+                    <span class="q-number">Soru 8</span>
+                    <button style="background: #d97706; color:white; border:none; padding:6px 12px; border-radius:5px; cursor:pointer;" onclick="toggleAnswer(this)">💡 Cevap</button>
+                </div>
+                <div class="q-text">√75 ifadesinin A√B şeklinde yazılışı aşağıdakilerden hangisidir?</div>
+                <div class="options">
+                    <div class="option">A) 3√5</div>
+                    <div class="option">B) 5√3</div>
+                    <div class="option">C) 25√3</div>
+                    <div class="option">D) 5√5</div>
+                </div>
+                <div class="answer-box">Doğru Cevap: B (√75 = √(25 · 3) = 5√3)</div>
+            </div>
+
+            <!-- Soru 9 -->
+            <div class="question-card">
+                <div class="q-header">
+                    <span class="q-number">Soru 9</span>
+                    <button style="background: #d97706; color:white; border:none; padding:6px 12px; border-radius:5px; cursor:pointer;" onclick="toggleAnswer(this)">💡 Cevap</button>
+                </div>
+                <div class="q-text">Alanları 196 m² olan kare şeklindeki bir bahçenin çevresi kaç metre?</div>
+                <div class="options">
+                    <div class="option">A) 48</div>
+                    <div class="option">B) 52</div>
+                    <div class="option">C) 56</div>
+                    <div class="option">D) 60</div>
+                </div>
+                <div class="answer-box">Doğru Cevap: C (Kenar uzunluğu √196 = 14 m, Çevre = 14 · 4 = 56 m)</div>
+            </div>
+
+            <!-- Soru 10 -->
+            <div class="question-card">
+                <div class="q-header">
+                    <span class="q-number">Soru 10</span>
+                    <button style="background: #d97706; color:white; border:none; padding:6px 12px; border-radius:5px; cursor:pointer;" onclick="toggleAnswer(this)">💡 Cevap</button>
+                </div>
+                <div class="q-text">Kenar uzunlukları √50 cm ve √8 cm olan dikdörtgenin alanı kaç cm² dir?</div>
+                <div class="options">
+                    <div class="option">A) 10</div>
+                    <div class="option">B) 20</div>
+                    <div class="option">C) 30</div>
+                    <div class="option">D) 40</div>
+                </div>
+                <div class="answer-box">Doğru Cevap: B (Alan = √50 · √8 = √400 = 20)</div>
+            </div>
+
+            <!-- Soru 11 -->
+            <div class="question-card">
+                <div class="q-header">
+                    <span class="q-number">Soru 11</span>
+                    <button style="background: #d97706; color:white; border:none; padding:6px 12px; border-radius:5px; cursor:pointer;" onclick="toggleAnswer(this)">💡 Cevap</button>
+                </div>
+                <div class="q-text">3√2 + 5√2 - 2√2 işleminin sonucu kaçtır?</div>
+                <div class="options">
+                    <div class="option">A) 6√2</div>
+                    <div class="option">B) 8√2</div>
+                    <div class="option">C) 10√2</div>
+                    <div class="option">D) 4√2</div>
+                </div>
+                <div class="answer-box">Doğru Cevap: A ((3+5-2)√2 = 6√2)</div>
+            </div>
+
+            <!-- Soru 12 -->
+            <div class="question-card">
+                <div class="q-header">
+                    <span class="q-number">Soru 12</span>
+                    <button style="background: #d97706; color:white; border:none; padding:6px 12px; border-radius:5px; cursor:pointer;" onclick="toggleAnswer(this)">💡 Cevap</button>
+                </div>
+                <div class="q-text">Kenar uzunlukları verilen bir üçgenin çevre uzunluğu √108 + √27 + √3 ise toplam çevre kaç birimdir?</div>
+                <div class="options">
+                    <div class="option">A) 8√3</div>
+                    <div class="option">B) 10√3</div>
+                    <div class="option">C) 12√3</div>
+                    <div class="option">D) 15√3</div>
+                </div>
+                <div class="answer-box">Doğru Cevap: B (6√3 + 3√3 + 1√3 = 10√3)</div>
+            </div>
+
+            <!-- Soru 13 -->
+            <div class="question-card">
+                <div class="q-header">
+                    <span class="q-number">Soru 13</span>
+                    <button style="background: #d97706; color:white; border:none; padding:6px 12px; border-radius:5px; cursor:pointer;" onclick="toggleAnswer(this)">💡 Cevap</button>
+                </div>
+                <div class="q-text">Bir torbada 1'den 20'ye kadar numaralandırılmış özdeş toplar vardır. Torbadan rastgele çekilen bir topun üzerindeki sayının asal sayı olma olasılığı nedir?</div>
+                <div class="options">
+                    <div class="option">A) 7/20</div>
+                    <div class="option">B) 8/20</div>
+                    <div class="option">C) 9/20</div>
+                    <div class="option">D) 1/2</div>
+                </div>
+                <div class="answer-box">Doğru Cevap: B (Asal sayılar: 2,3,5,7,11,13,17,19 toplam 8 tane. 8/20)</div>
+            </div>
+
+            <!-- Soru 14 -->
+            <div class="question-card">
+                <div class="q-header">
+                    <span class="q-number">Soru 14</span>
+                    <button style="background: #d97706; color:white; border:none; padding:6px 12px; border-radius:5px; cursor:pointer;" onclick="toggleAnswer(this)">💡 Cevap</button>
+                </div>
+                <div class="q-text">Hilesiz bir zar atıldığında üst yüzüne gelen sayının 4'ten büyük olma olasılığı kaçtır?</div>
+                <div class="options">
+                    <div class="option">A) 1/6</div>
+                    <div class="option">B) 1/3</div>
+                    <div class="option">C) 1/2</div>
+                    <div class="option">D) 2/3</div>
+                </div>
+                <div class="answer-box">Doğru Cevap: B (4'ten büyükler: 5 ve 6 -> 2/6 = 1/3)</div>
+            </div>
+
+            <!-- Soru 15 -->
+            <div class="question-card">
+                <div class="q-header">
+                    <span class="q-number">Soru 15</span>
+                    <button style="background: #d97706; color:white; border:none; padding:6px 12px; border-radius:5px; cursor:pointer;" onclick="toggleAnswer(this)">💡 Cevap</button>
+                </div>
+                <div class="q-text">Bir okulda düzenlenen kurada 'ANKARA' kelimesindeki harflerden rastgele seçilen bir harfin 'A' olma olasılığı nedir?</div>
+                <div class="options">
+                    <div class="option">A) 1/6</div>
+                    <div class="option">B) 2/6</div>
+                    <div class="option">C) 3/6</div>
+                    <div class="option">D) 4/6</div>
+                </div>
+                <div class="answer-box">Doğru Cevap: C (A harfi 3 tanedir. Toplam 6 harf. 3/6 = 1/2)</div>
+            </div>
+
+            <!-- Soru 16 -->
+            <div class="question-card">
+                <div class="q-header">
+                    <span class="q-number">Soru 16</span>
+                    <button style="background: #d97706; color:white; border:none; padding:6px 12px; border-radius:5px; cursor:pointer;" onclick="toggleAnswer(this)">💡 Cevap</button>
+                </div>
+                <div class="q-text">(x + 4) · (x - 3) cebirsel ifadesinin en sade hali aşağıdakilerden hangisidir?</div>
+                <div class="options">
+                    <div class="option">A) x² + x - 12</div>
+                    <div class="option">B) x² - x - 12</div>
+                    <div class="option">C) x² + 7x - 12</div>
+                    <div class="option">D) x² - 12</div>
+                </div>
+                <div class="answer-box">Doğru Cevap: A (x² - 3x + 4x - 12 = x² + x - 12)</div>
+            </div>
+
+            <!-- Soru 17 -->
+            <div class="question-card">
+                <div class="q-header">
+                    <span class="q-number">Soru 17</span>
+                    <button style="background: #d97706; color:white; border:none; padding:6px 12px; border-radius:5px; cursor:pointer;" onclick="toggleAnswer(this)">💡 Cevap</button>
+                </div>
+                <div class="q-text">9x² - 25 cebirsel ifadesinin çarpanlarına ayrılmış hali hangisidir?</div>
+                <div class="options">
+                    <div class="option">A) (3x-5)²</div>
+                    <div class="option">B) (3x-5)(3x+5)</div>
+                    <div class="option">C) (9x-5)(x+5)</div>
+                    <div class="option">D) (3x+5)²</div>
+                </div>
+                <div class="answer-box">Doğru Cevap: B (İki kare farkı: (3x)² - 5² = (3x-5)(3x+5))</div>
+            </div>
+
+            <!-- Soru 18 -->
+            <div class="question-card">
+                <div class="q-header">
+                    <span class="q-number">Soru 18</span>
+                    <button style="background: #d97706; color:white; border:none; padding:6px 12px; border-radius:5px; cursor:pointer;" onclick="toggleAnswer(this)">💡 Cevap</button>
+                </div>
+                <div class="q-text">Çevresi 12x + 16 olan kare şeklindeki bir bahçenin bir kenar uzunluğunu veren cebirsel ifade nedir?</div>
+                <div class="options">
+                    <div class="option">A) 3x + 4</div>
+                    <div class="option">B) 4x + 4</div>
+                    <div class="option">C) 6x + 8</div>
+                    <div class="option">D) 3x + 8</div>
+                </div>
+                <div class="answer-box">Doğru Cevap: A ((12x + 16) / 4 = 3x + 4)</div>
+            </div>
+
+            <!-- Soru 19 -->
+            <div class="question-card">
+                <div class="q-header">
+                    <span class="q-number">Soru 19</span>
+                    <button style="background: #d97706; color:white; border:none; padding:6px 12px; border-radius:5px; cursor:pointer;" onclick="toggleAnswer(this)">💡 Cevap</button>
+                </div>
+                <div class="q-text">Alanı x² + 8x + 16 olan bir karenin bir kenar uzunluğu kaç birimdir?</div>
+                <div class="options">
+                    <div class="option">A) x + 2</div>
+                    <div class="option">B) x + 4</div>
+                    <div class="option">C) x - 4</div>
+                    <div class="option">D) x + 8</div>
+                </div>
+                <div class="answer-box">Doğru Cevap: B (x²+8x+16 = (x+4)² olduğundan kenar x+4'tür.)</div>
+            </div>
+
+            <!-- Soru 20 -->
+            <div class="question-card">
+                <div class="q-header">
+                    <span class="q-number">Soru 20</span>
+                    <button style="background: #d97706; color:white; border:none; padding:6px 12px; border-radius:5px; cursor:pointer;" onclick="toggleAnswer(this)">💡 Cevap</button>
+                </div>
+                <div class="q-text">Birler ve onlar basamağı toplamı 7 olan iki basamaklı kaç farklı asal sayı vardır?</div>
+                <div class="options">
+                    <div class="option">A) 1</div>
+                    <div class="option">B) 2</div>
+                    <div class="option">C) 3</div>
+                    <div class="option">D) 4</div>
+                </div>
+                <div class="answer-box">Doğru Cevap: B (Toplamı 7 olanlar: 16, 25, 34, 43, 52, 61, 70. Bunlardan asal olanlar 43 ve 61'dir. Toplam 2 tane.)</div>
+            </div>
+
+            <!-- Yapımcı Ekranı -->
+            <div class="creator-screen">
+                <h2>🏆 YAZILDI 🏆</h2>
+                <p>YAPIMCISI</p>
+                <p style="font-size: 2.2rem; color: #f87171; margin-top: 15px;">TOPRAK AŞTOPRAK</p>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        let currentTool = null;
+        let isDrawing = false;
+        
+        const canvas = document.getElementById('drawing-canvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        function toggleAnswer(btn) {
+            const card = btn.closest('.question-card');
+            const ansBox = card.querySelector('.answer-box');
+            if (ansBox) {
+                ansBox.style.display = ansBox.style.display === 'block' ? 'none' : 'block';
+            }
+        }
+
+        function setTool(tool) {
+            currentTool = currentTool === tool ? null : tool;
+            document.getElementById('penBtn').classList.remove('active');
+            document.getElementById('eraserBtn').classList.remove('active');
+            
+            if(currentTool) {
+                document.getElementById(tool + 'Btn').classList.add('active');
+                canvas.classList.add('active');
+            } else {
+                canvas.classList.remove('active');
+            }
+        }
+
+        function setColor(color) {
+            ctx.strokeStyle = color;
+        }
+
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        canvas.addEventListener('mousedown', (e) => {
+            if (!currentTool) return;
+            isDrawing = true;
+            ctx.beginPath();
+            ctx.moveTo(e.clientX, e.clientY);
+        });
+
+        canvas.addEventListener('mousemove', (e) => {
+            if (!isDrawing || !currentTool) return;
+            ctx.lineWidth = currentTool === 'eraser' ? 30 : 4;
+            ctx.lineCap = 'round';
+            if (currentTool === 'eraser') {
+                ctx.globalCompositeOperation = 'destination-out';
+            } else {
+                ctx.globalCompositeOperation = 'source-over';
+                ctx.strokeStyle = document.getElementById('colorPicker').value;
+            }
+            ctx.lineTo(e.clientX, e.clientY);
+            ctx.stroke();
+        });
+
+        canvas.addEventListener('mouseup', () => { isDrawing = false; });
+        canvas.addEventListener('mouseleave', () => { isDrawing = false; });
+    </script>
+</body>
+</html>
